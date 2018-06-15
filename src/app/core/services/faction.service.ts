@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Faction } from "../models";
 
 @Injectable()
@@ -27,12 +27,11 @@ export class FactionService implements OnInit {
     }
 
     getAll() : Observable<Faction[]> {
-        return null; //return Observable.from(this.factions);
+        return of(this.factions);
     }
 
     get(id:String) : Observable<Faction> {
-        return null;
-        // let faction = this.factions.find(f => f.id == id);
-        // return Observable.of(faction);
+        let faction = this.factions.find(f => f.id == id);
+        return of(faction);
     }
 }

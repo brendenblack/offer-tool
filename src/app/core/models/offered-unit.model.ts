@@ -4,5 +4,5 @@ export class OfferedUnit
 {
     unit: Unit;
     shouldDisplay: boolean;
-    
+    amount: number;
 }

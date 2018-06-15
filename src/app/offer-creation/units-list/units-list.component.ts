@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UnitService } from '../../core/services/unit.service';
+import { Unit } from '../../core/models';
 
 @Component({
   selector: 'app-units-list',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UnitsListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private unitService:UnitService) { }
+
+  units : Unit[];
 
   ngOnInit() {
+    this.unitService.getAll().subscribe(units => this.units = units);
   }
 
 }
