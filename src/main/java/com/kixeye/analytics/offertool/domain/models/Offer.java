@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Table(name = "offers", schema = "offers")
+@Table(name = "offers")
 public class Offer
 {
 

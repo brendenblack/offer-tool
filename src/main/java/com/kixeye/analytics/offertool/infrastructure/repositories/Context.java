@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class Context
 {
     private final Logger log = LoggerFactory.getLogger(Context.class);
+
     private final OfferRepository offerRepository;
     private final UserOfferRepository userOfferRepository;
 
@@ -23,5 +24,9 @@ public class Context
 
         this.userOfferRepository = userOfferRepository;
         this.offerRepository = offerRepository;
+
+
+
+
     }
 }

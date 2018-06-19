@@ -10,15 +10,20 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Table(name = "user_offers", schema = "offers")
+@Table(name = "user_offers")
 public class UserOffer
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer userId;
+//    @Column(name = "user_id")
+//    private Integer userId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
 //    @Column(name = "offer_id")
 //    private Integer offerId;
