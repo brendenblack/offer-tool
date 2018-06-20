@@ -213,3 +213,6 @@ typings/
 /target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
 /target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
 /target/test-classes/com/kixeye/analytics/offertool/OfferToolApplicationTests.class
+
+
+application-dev.properties

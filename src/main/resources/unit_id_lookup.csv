@@ -1,0 +1,54 @@
+ID,TokenID,Unit,Faction,Type,Gen,Classification,Bundles,UsedByMonetized,PctWin,DmgRatio,AvgLevel
+343,,Darkstorm,Corpus,Unique,,Vehicle,,#N/A,#N/A,#N/A,#N/A
+70,,Titan,None,Unique,,Aircraft,,7179325,0.97290873,8.33617485,20.5
+288,,Blackout,Corpus,Unique,,Aircraft,,6192825,0.93245199,7.89567087,20.5
+147,,Sandstorm,None,Unique,,Aircraft,,5053998,0.97711653,8.62353315,20.5
+224,18650,Fury,Corpus,Standard,1,Aircraft,,4573973,0.85631616,7.64693821,10.5
+217,,Juggernaut,Sentinels,Unique,,Vehicle,,3891256,0.54704599,#N/A,20.5
+233,18735,Bonesaw,Survivors,Standard,1,Aircraft,,3015142,0.94699686,4.95572958,10.5
+251,18821,Phalanx,Corpus,Standard,1,Vehicle,,2939241,0.8154299,8.6778886,10.5
+337,20600,Caretaker,Sentinels,Standard,2,Vehicle,,2496777,0.50215378,0,10.5
+226,,Herald,Sentinels,Unique,,Aircraft,,2105720,0.81741162,7.77679439,20.5
+261,18707,Valiant,Sentinels,Standard,1,Aircraft,,1893904,0.89254735,2.61336383,10.5
+220,18726,Apollo,Corpus,Standard,1,Aircraft,,1823277,0.95998962,4.07767336,10.5
+202,18661,Liberator,Survivors,Standard,1,Infantry,,1651321,0.84570656,1.97209022,10.5
+304,20202,Technical,Survivors,Standard,2,Vehicle,,1600125,0.57249027,4.43772954,10.5
+271,,Nyx,Corpus,Hero,,Aircraft,Fury Hero,1510361,0.846491,8.09310855,3
+229,,Oren,Corpus,Hero,,Aircraft,Apollo Hero,262808,0.95316353,3.36195586,2.5
+311,,Siege Squadron,Survivors,Unique,,Aircraft,,1311034,1.90674841,0.02839189,2
+225,18829,Vindicator,Sentinels,Standard,1,Vehicle,,1066011,0.62135944,#N/A,10.5
+249,18677,Spartan ZK,Corpus,Standard,1,Infantry,,912886,0.78645746,12.3929634,10.5
+179,,Deena,None,Special Forces,,Aircraft,,1835395,0.7452483,8.63667214,10.5
+187,,Pandora,None,Special Forces,,Aircraft,,858764,0.96155172,2.13118076,11.5
+138,,Phantom,None,Unique,,Aircraft,,633818,0.87917036,11.1454505,20.5
+221,18760,Purifier,Sentinels,Standard,1,Vehicle,,613977,0.6403318,0.82165816,10.5
+212,18654,Hammer,Survivors,Standard,1,Vehicle,,587883,0.73025245,2.30928867,10.5
+222,18780,Acolyte,Sentinels,Standard,1,Infantry,,481963,0.75227559,2.05000183,10.5
+333,20455,Drakon,Corpus,Standard,2,Infantry,,410191,0.59973525,5.48185678,10.5
+219,18769,Hades,Corpus,Standard,1,Vehicle,,319221,0.63649948,2.82998352,10.5
+230,,Ardra,Sentinels,Hero,,Vehicle,Purifier Hero,1407656,0.55983138,1.43102913,3
+272,,Sunder,Sentinels,Hero,,Vehicle,Vindicator Hero,257295,0.59718222,#N/A,2.5
+257,,War Rig,Survivors,Unique,,Vehicle,,222560,0.74385334,7.65886679,20.5
+285,18985,War Dog,Survivors,Standard,2,Infantry,,214896,0.67870505,0.2678791,8
+295,19660,Chaplain,Sentinels,Standard,2,Infantry,,205550,0.73777183,1.87715943,9
+340,20959,Breacher,Survivors,Standard,2,Infantry,,203762,0.61970829,2.06965365,10.5
+193,,Hydra,None,Unique,,Infantry,,181661,0.78115281,5.31311521,22.3888889
+262,18824,Seeker,Sentinels,Standard,1,Vehicle,,172689,0.5684149,3.14443906,10.5
+347,,Burnside,Sentinels,Hero,,Infantry,Breacher Hero,3424,0.67464953,5.11958974,2
+228,,Roland,Survivors,Hero,,Vehicle,Hammer Hero,170281,0.6481463,3.66084994,3
+290,19351,Cyclops,Corpus,Standard,2,Vehicle,,155254,0.75013204,2.19488968,10
+232,18742,Disruptor,Survivors,Standard,1,Vehicle,,91353,0.73301369,0.64056422,10.5
+173,,Jericho,None,Special Forces,,Vehicle,,643907,0.64247787,#N/A,10.5
+168,,Doran,None,Special Forces,,Vehicle,,82867,0.83141661,#N/A,10.5
+128,,Sheila,None,Special Forces,,Infantry,,78670,0.82707512,4.4501413,10.5
+143,,Kara,None,Special Forces,,Infantry,,65194,0.83654938,6.99531993,10.5
+213,18765,Detonator,Survivors,Standard,1,Vehicle,,52864,0.35300015,2.26919647,10.5
+178,,Dante,None,Special Forces,,Vehicle,,56044,0.79755192,2.83830234,10.5
+270,,Weaver,Survivors,Hero,,Infantry,Liberator Hero,155593,0.61201982,2.2675567,2.5
+184,,Baldur,None,Special Forces,,Vehicle,,50180,0.78764448,2.64315212,10.5
+346,,Polly,Corpus,Hero,,Vehicle,Cyclops Hero,44060,0.52110758,2.47184682,2.5
+345,,Max,Survivors,Hero,,Infantry,War Dog Hero,10468,0.63947268,1.48389555,2.5
+137,,Brother Jeremiah,None,Special Forces,,Infantry,,32432,0.88218426,5.00736308,10.5
+366,,Envoy,Sentinels,Standard,3,Aircraft,,#N/A,#N/A,#N/A,#N/A
+375,,Sharpshooter,Survivors,Standard,3,Infantry,,#N/A,#N/A,#N/A,#N/A
+360,,Sphinx,Corpus,Standard,3,Aircraft,,#N/A,#N/A,#N/A,#N/A

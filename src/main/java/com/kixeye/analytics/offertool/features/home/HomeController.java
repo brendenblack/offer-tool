@@ -29,7 +29,7 @@ public class HomeController
     public @ResponseBody List<String> index()
     {
         log.info("Retrieving offers");
-        List<Offer> offers = Lists.newArrayList(this.context.getOfferRepository().findAll());
+        List<Offer> offers = Lists.newArrayList(this.context.getOffers().findAll());
         log.info("Found {} offer(s)", offers.size());
         List<String> results = new ArrayList<>();
         for (Offer offer : offers)

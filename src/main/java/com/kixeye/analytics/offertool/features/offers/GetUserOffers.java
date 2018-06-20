@@ -58,7 +58,7 @@ public class GetUserOffers
         {
             List<UserOfferModel> offers = new ArrayList<>();
 
-            for (UserOffer uo: this.context.getUserOfferRepository().findByOfferId(message.getOfferId()))
+            for (UserOffer uo: this.context.getUserOffers().findByOfferId(message.getOfferId()))
             {
                 UserOfferModel o = new UserOfferModel();
                 o.setNumberPurchased(uo.getAmountPurchased());

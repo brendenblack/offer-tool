@@ -1,12 +1,19 @@
 package com.kixeye.analytics.offertool.domain.models;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kixeye.analytics.offertool.domain.offers.OfferContent;
+import com.kixeye.analytics.offertool.domain.offers.OfferDisplayedItem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +24,7 @@ import java.util.List;
 @Table(name = "offers")
 public class Offer
 {
+    private Logger log = LoggerFactory.getLogger(Offer.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -68,12 +76,56 @@ public class Offer
     private Integer templateId;
 
     @Column(name = "displayed_items")
-    private String displayedItems;
+    private String displayedItemsJson;
+
+    @Transient
+    private List<OfferDisplayedItem> displayedItems = new ArrayList<>();
+
+    public List<OfferDisplayedItem> getDisplayedItems()
+    {
+        if (displayedItems.size() <= 0)
+        {
+            try
+            {
+                ObjectMapper mapper = new ObjectMapper();
+                List<OfferDisplayedItem> items = mapper.readValue(this.displayedItemsJson, new TypeReference<List<OfferDisplayedItem>>() {
+                });
+
+                this.displayedItems.clear();
+                this.displayedItems.addAll(items);
+            }
+            catch (IOException e)
+            {
+                log.error("", e);
+            }
+        }
+
+        return getDisplayedItems();
+    }
 
     @Column(name = "display_options")
     private String displayedOptions;
 
-    private String content;
+    @Column(name = "content")
+    private String contentJson;
+
+    @Transient
+    private OfferContent content;
+
+    public OfferContent getContent()
+    {
+        if (content == null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                this.content = objectMapper.readValue(this.contentJson, OfferContent.class);
+            } catch (IOException e) {
+                log.error("An error occurred while hydrating blog {}", this.contentJson, e);
+                this.content = null;
+            }
+        }
+
+        return this.content;
+    }
 
     @Column(name = "mod_time")
     private Long modifiedTime;

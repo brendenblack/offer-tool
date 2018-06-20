@@ -1,6 +1,6 @@
-package com.kixeye.analytics.offertool.features.offers;
+package com.kixeye.analytics.offertool.features.units;
 
-import com.kixeye.analytics.offertool.domain.models.Offer;
+import com.kixeye.analytics.offertool.domain.models.Unit;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
 import lombok.Getter;
@@ -8,11 +8,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GetAll
 {
@@ -22,29 +22,25 @@ public class GetAll
     @Setter
     public static class Model
     {
-        public List<OfferModel> offers = new ArrayList<>();
+        private List<UnitModel> units = new ArrayList<>();
     }
 
     @Getter
     @Setter
     @ToString
-    public static class OfferModel
+    public static class UnitModel
     {
-        private String offerCode;
-        private long startTime;
-        private long endTime;
-        private long duration;
         private int id;
+        private String name;
+        private String faction;
     }
 
-    @Service("getAllOffers")
+    @Service("getAllUnits")
     public static class Handler implements RequestHandler<Query, Model>
     {
         private final Logger log = LoggerFactory.getLogger(Handler.class);
         private final Context context;
 
-
-        @Autowired
         Handler(Context context)
         {
             this.context = context;
@@ -53,25 +49,19 @@ public class GetAll
         @Override
         public Model handle(Query message)
         {
-            log.info("Retrieving all offers");
-
-            List<OfferModel> offers = new ArrayList<>();
-            for (Offer offer : this.context.getOffers().findAll())
+            List<UnitModel> models = new ArrayList<>();
+            for (Unit unit : this.context.getUnits().findAll())
             {
-                log.debug(offer.toString());
-                OfferModel o = new OfferModel();
-                o.setId(offer.getId());
-                o.setOfferCode(offer.getOfferCode());
-                o.setDuration(offer.getDuration());
-                o.setStartTime(offer.getStartTime());
-                o.setEndTime(offer.getEndTime());
-                log.debug(offer.toString());
-                offers.add(o);
+                UnitModel u = new UnitModel();
+                u.setId(unit.getId());
+                u.setName(unit.getName());
+                u.setFaction(Optional.ofNullable(unit.getFaction()).map(x -> x.getName()).orElse("none"));
+                log.debug(u.toString());
+                models.add(u);
             }
 
             Model result = new Model();
-            result.setOffers(offers);
-
+            result.setUnits(models);
             return result;
         }
 
