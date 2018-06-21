@@ -21,9 +21,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Table(name = "offers")
+@Table(name = "offers", schema = "wc_live")
 public class Offer
 {
+    @Transient
     private Logger log = LoggerFactory.getLogger(Offer.class);
 
     @Id
@@ -83,7 +84,7 @@ public class Offer
 
     public List<OfferDisplayedItem> getDisplayedItems()
     {
-        if (displayedItems.size() <= 0)
+        if (displayedItems.size() <= 0 && displayedItemsJson != null)
         {
             try
             {
@@ -100,18 +101,24 @@ public class Offer
             }
         }
 
-        return getDisplayedItems();
+        return this.displayedItems;
     }
 
     @Column(name = "display_options")
     private String displayedOptions;
 
+    //region content
     @Column(name = "content")
     private String contentJson;
 
     @Transient
     private OfferContent content;
 
+    /**
+     * Represents a the content being offered: units, base upgrades, tech
+     *
+     * @return A deserialized represntation of the JSON blob stored in the offer table
+     */
     public OfferContent getContent()
     {
         if (content == null) {
@@ -126,6 +133,12 @@ public class Offer
 
         return this.content;
     }
+
+    public void setContent(OfferContent content)
+    {
+        // TODO: serialize content
+    }
+    //endregion
 
     @Column(name = "mod_time")
     private Long modifiedTime;

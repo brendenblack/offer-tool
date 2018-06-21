@@ -75,8 +75,8 @@ public class OfferContentDeserializer extends StdDeserializer<OfferContent>
                     continue;
                 }
 
-                int level = unitUnlockNode.get("level").asInt(1);
-                int skin = unitUnlockNode.get("skin").asInt(2);
+                int level = (unitUnlockNode.has("level")) ? unitUnlockNode.get("level").asInt(1) : 1;
+                int skin = (unitUnlockNode.has("skin")) ? unitUnlockNode.get("skin").asInt(2) : 2;
 
                 ucuu.setType(type);
                 ucuu.setLevel(level);

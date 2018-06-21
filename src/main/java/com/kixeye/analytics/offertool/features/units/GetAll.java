@@ -33,6 +33,9 @@ public class GetAll
         private int id;
         private String name;
         private String faction;
+        private String type;
+        private String classification;
+        private int generation;
     }
 
     @Service("getAllUnits")
@@ -56,6 +59,9 @@ public class GetAll
                 u.setId(unit.getId());
                 u.setName(unit.getName());
                 u.setFaction(Optional.ofNullable(unit.getFaction()).map(x -> x.getName()).orElse("none"));
+                u.setType(unit.getType());
+                u.setClassification(unit.getClassification());
+                u.setGeneration(unit.getGeneration());
                 log.debug(u.toString());
                 models.add(u);
             }

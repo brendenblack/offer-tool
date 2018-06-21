@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,9 +23,12 @@ public class OffersController
     }
 
     @GetMapping
-    public GetAll.Model getAllOffers()
+    public GetAll.Model getAllOffers(@RequestParam(value = "active", required = false, defaultValue = "false") boolean active)
     {
-        return this.mediator.send(new GetAll.Query(), GetAll.Model.class);
+        GetAll.Query message = new GetAll.Query();
+        message.setOnlyActive(active);
+
+        return this.mediator.send(message, GetAll.Model.class);
     }
 
     @GetMapping(path = "/{offerId}/users")
@@ -34,6 +38,15 @@ public class OffersController
         message.setOfferId(offerId);
 
         return this.mediator.send(message, GetUserOffers.Model.class);
+    }
+
+    @GetMapping(path = "/{offerId}")
+    public GetOffer.Model getOffer(@PathVariable int offerId)
+    {
+        GetOffer.Query message = new GetOffer.Query();
+        message.setOfferId(offerId);
+
+        return this.mediator.send(message, GetOffer.Model.class);
     }
 
 }

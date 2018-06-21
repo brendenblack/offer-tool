@@ -1,22 +1,28 @@
 package com.kixeye.analytics.offertool.domain.models;
 
+import com.kixeye.analytics.offertool.domain.UnitTypes;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @ToString
 @EqualsAndHashCode
 public class Unit
 {
-    Unit(int id, String name, Faction faction, String classification, int generation)
+    private final Logger log = LoggerFactory.getLogger(Unit.class);
+
+    Unit(int id, String name, Faction faction, String classification, int generation, String type)
     {
+        log.debug("Constructing unit [id: {}] [name: {}] [gen: {}]", id, name, generation);
         this.id = id;
         this.name = name;
         this.faction = faction;
         this.classification = classification;
         this.generation = generation;
+        this.type = type;
     }
 
     @Getter
@@ -33,6 +39,9 @@ public class Unit
 
     @Getter
     private int generation;
+
+    @Getter
+    private String type;
 
 
 
@@ -54,7 +63,20 @@ public class Unit
 
     public interface RequiresClassification
     {
-        Buildable ofClassification(String classification);
+        RequiresType ofClassification(String classification);
+    }
+
+    public interface RequiresType
+    {
+        Buildable isHero();
+
+        Buildable isUnique();
+
+        Buildable isStandard();
+
+        Buildable isSpecialForces();
+
+        Buildable ofType(String type);
     }
 
     public interface Buildable
@@ -65,12 +87,13 @@ public class Unit
     }
 
 
-    static class Builder implements RequiresName, RequiresFaction, RequiresClassification, Buildable
+    public static class Builder implements RequiresName, RequiresFaction, RequiresClassification, RequiresType, Buildable
     {
         private final int id;
         private String name;
         private String classification;
         private Faction faction;
+        private String type;
         private int generation = 0;
 
         Builder(int id)
@@ -92,7 +115,7 @@ public class Unit
         }
 
         @Override
-        public Buildable ofClassification(String classification)
+        public RequiresType ofClassification(String classification)
         {
             this.classification = classification;
             return this;
@@ -108,8 +131,38 @@ public class Unit
         @Override
         public Unit build()
         {
-            Unit unit = new Unit(this.id, this.name, this.faction, this.classification, this.generation);
+            Unit unit = new Unit(this.id, this.name, this.faction, this.classification, this.generation, this.type);
             return unit;
+        }
+
+        @Override
+        public Buildable isHero() {
+            this.type = UnitTypes.HERO;
+            return this;
+        }
+
+        @Override
+        public Buildable isUnique() {
+            this.type = UnitTypes.UNIQUE;
+            return this;
+        }
+
+        @Override
+        public Buildable isStandard()
+        {
+            this.type = UnitTypes.STANDARD;
+            return this;
+        }
+
+        @Override
+        public Buildable isSpecialForces() {
+            this.type = UnitTypes.SPECIAL_FORCES;
+            return this;
+        }
+
+        @Override
+        public Buildable ofType(String type) {
+            return null;
         }
     }
 

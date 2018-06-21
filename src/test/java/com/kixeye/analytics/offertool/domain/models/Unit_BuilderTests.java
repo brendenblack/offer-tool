@@ -26,7 +26,9 @@ public class Unit_BuilderTests
                 .named(name)
                 .belongsTo(faction)
                 .ofClassification(UnitClassifications.AIRCRAFT)
+                .isHero()
                 .ofGeneration(generation)
+
                 .build();
 
         collector.checkThat(unit.getId(), is(id));

@@ -4,6 +4,7 @@ import com.kixeye.analytics.offertool.domain.UnitTypes;
 import com.kixeye.analytics.offertool.domain.models.Faction;
 import com.kixeye.analytics.offertool.domain.models.Unit;
 import com.kixeye.analytics.offertool.domain.UnitClassifications;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,22 @@ public class UnitRepository
         log.debug("Initializing units repository");
         this.factionRepository = factionRepository;
         doReload();
+    }
+
+    private long lastUpdate;
+
+    public LocalDateTime getLastUpdate()
+    {
+        if (lastUpdate <= 0)
+        {
+            return LocalDateTime.MAX;
+        }
+        else
+        {
+            return Instant.ofEpochMilli(this.lastUpdate)
+                    .atZone(ZoneOffset.systemDefault())
+                    .toLocalDateTime();
+        }
     }
 
     public void doReload()
@@ -61,34 +81,20 @@ public class UnitRepository
 
                 String factionName = entry[3];
 
-                String type;
-                switch (entry[4].toUpperCase())
-                {
-                    case "HERO":
-                        type = UnitTypes.HERO;
-                        break;
-                    case "UNIQUE":
-                        type = UnitTypes.UNIQUE;
-                        break;
-                    case "SPECIAL FORCES":
-                        type = UnitTypes.SPECIAL_FORCES;
-                        break;
-                    case "STANDARD":
-                    default:
-                        type = UnitTypes.STANDARD;
-                        break;
-                }
 
                 int generation;
+
                 switch (entry[5])
                 {
                     case "1":
                         generation = 1;
                         break;
                     case "2":
+                        log.debug("Unit {} is gen 2", id);
                         generation = 2;
                         break;
                     case "3":
+                        log.debug("Unit {} is gen 3", id);
                         generation = 3;
                         break;
                     default:
@@ -113,12 +119,32 @@ public class UnitRepository
 
                 Faction faction = this.factionRepository.findByName(factionName).orElse(null);
 
-                Unit unit = Unit.withId(id)
+                Unit.Builder builder = (Unit.Builder) Unit.withId(id)
                         .named(name)
                         .belongsTo(faction)
-                        .ofClassification(classification)
-                        .ofGeneration(generation)
-                        .build();
+                        .ofClassification(classification);
+
+                String type;
+                switch (entry[4].toUpperCase())
+                {
+                    case "HERO":
+                        builder.isHero();
+                        break;
+                    case "UNIQUE":
+                        builder.isUnique();
+                        break;
+                    case "SPECIAL FORCES":
+                        builder.isSpecialForces();
+                        break;
+                    case "STANDARD":
+                    default:
+                        builder.isStandard();
+                        break;
+                }
+
+
+
+                Unit unit = builder.ofGeneration(generation).build();
 
                 this.units.add(unit);
             }

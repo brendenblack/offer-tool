@@ -27,6 +27,12 @@ public class GetUserOffers
     @Setter
     public static class Model
     {
+        private int received;
+        private int uniquePurchased;
+        private int totalPurchased;
+        private double conversionRate;
+        private int numberOffered;
+
         private List<UserOfferModel> userOffers = new ArrayList<>();
     }
 
@@ -36,12 +42,9 @@ public class GetUserOffers
     {
         private int userId;
         private int numberPurchased;
-
-
-
     }
 
-    @Service
+    @Service("getUserOffersHandler")
     public static class Handler implements RequestHandler<Query,Model>
     {
         private final Logger log = LoggerFactory.getLogger(Handler.class);
@@ -56,19 +59,32 @@ public class GetUserOffers
         @Override
         public Model handle(Query message)
         {
-            List<UserOfferModel> offers = new ArrayList<>();
-
-            for (UserOffer uo: this.context.getUserOffers().findByOfferId(message.getOfferId()))
-            {
-                UserOfferModel o = new UserOfferModel();
-                o.setNumberPurchased(uo.getAmountPurchased());
-                int id = Optional.of(uo).map(x -> x.getUser()).map(u -> u.getUserid()).orElse(0);
-                o.setUserId(id);
-                offers.add(o);
-            }
+            log.debug("Fetching user offers for offer {}", message.getOfferId());
 
             Model result = new Model();
-            result.setUserOffers(offers);
+
+            for (UserOffer userOffer: this.context.getUserOffers().findByOfferId(message.getOfferId()))
+            {
+                result.setNumberOffered(result.getNumberOffered() + 1);
+                log.trace(userOffer.toString());
+                UserOfferModel model = new UserOfferModel();
+                model.setNumberPurchased(userOffer.getAmountPurchased());
+                // int id = Optional.of(userOffer).map(x -> x.getUser()).map(u -> u.getUserid()).orElse(0);
+//                switch (userOffer.getStatus())
+//                {}
+                model.setUserId(userOffer.getUserId());
+
+
+                if (userOffer.getAmountPurchased() > 0)
+                {
+                    result.setTotalPurchased(result.getTotalPurchased() + userOffer.getAmountPurchased());
+                    result.setUniquePurchased(result.getUniquePurchased() + 1);
+                }
+
+                result.getUserOffers().add(model);
+
+            }
+
             return result;
         }
 

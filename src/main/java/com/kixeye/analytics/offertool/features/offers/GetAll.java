@@ -11,12 +11,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetAll
 {
-    public static class Query {}
+    @Getter
+    @Setter
+    public static class Query
+    {
+        private boolean onlyActive = false;
+
+    }
 
     @Getter
     @Setter
@@ -35,6 +42,7 @@ public class GetAll
         private long endTime;
         private long duration;
         private int id;
+        private boolean active;
     }
 
     @Service("getAllOffers")
@@ -55,8 +63,17 @@ public class GetAll
         {
             log.info("Retrieving all offers");
 
-            List<OfferModel> offers = new ArrayList<>();
-            for (Offer offer : this.context.getOffers().findAll())
+
+            List<OfferModel> models = new ArrayList<>();
+
+            long now = Instant.now().toEpochMilli() / 1000;
+
+            Iterable<Offer> offers = (message.isOnlyActive())
+                    ? this.context.getOffers().findAllActive()
+                    : this.context.getOffers().findAll();
+
+
+            for (Offer offer : offers)
             {
                 log.debug(offer.toString());
                 OfferModel o = new OfferModel();
@@ -65,12 +82,16 @@ public class GetAll
                 o.setDuration(offer.getDuration());
                 o.setStartTime(offer.getStartTime());
                 o.setEndTime(offer.getEndTime());
+                boolean isActive = offer.getEndTime() > now;
+                log.debug("[end time: {}] [now: {}] [active?: {}]", offer.getEndTime(), now, isActive);
+
+                o.setActive(isActive);
                 log.debug(offer.toString());
-                offers.add(o);
+                models.add(o);
             }
 
             Model result = new Model();
-            result.setOffers(offers);
+            result.setOffers(models);
 
             return result;
         }

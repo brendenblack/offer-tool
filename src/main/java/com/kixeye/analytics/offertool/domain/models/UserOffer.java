@@ -20,17 +20,23 @@ public class UserOffer
 //    @Column(name = "user_id")
 //    private Integer userId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
+    @Column(name = "user_id")
+    private int userId;
 
 
 //    @Column(name = "offer_id")
 //    private Integer offerId;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "offer_id")
+//    private Offer offer;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "offer_id")
-    private Offer offer;
+    @Column(name = "offer_id")
+    private int offerId;
 
     private Integer status;
 
