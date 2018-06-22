@@ -34,6 +34,18 @@ public class Offer
     @Column(name = "offer_code")
     private String offerCode;
 
+    public void setOfferCode(String offerCode)
+    {
+        if (offerCode.length() > 20)
+        {
+            this.offerCode = offerCode.substring(0, 19);
+        }
+        else
+        {
+            this.offerCode = offerCode;
+        }
+    }
+
     @Column(name = "start_time")
     private Long startTime;
 

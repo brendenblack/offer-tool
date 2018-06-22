@@ -1,5 +1,8 @@
 package com.kixeye.analytics.offertool.features.offers;
 
+import com.kixeye.analytics.offertool.domain.offers.OfferContent;
+import com.kixeye.analytics.offertool.domain.offers.OfferContentUnit;
+import com.kixeye.analytics.offertool.domain.offers.OfferContentUnitUnlock;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
 import lombok.Getter;
@@ -28,8 +31,14 @@ public class Create
         private List<OfferUnitsCommand> unitsOffered = new ArrayList<>();
 
         private List<OfferTechCommand> techOffered = new ArrayList<>();
+    }
 
-
+    @Getter
+    @Setter
+    public static class UnitCommand
+    {
+        private int unitId;
+        private boolean display;
     }
 
     @Getter
@@ -41,7 +50,6 @@ public class Create
         private int builtUnits;
         private int level = 0;
         private boolean display = true;
-
     }
 
     @Getter
@@ -73,6 +81,10 @@ public class Create
         @Override
         public Model handle(Command message)
         {
+            List<OfferContentUnitUnlock> unlocks = new ArrayList<>();
+            List<OfferContentUnit> units = new ArrayList<>();
+            OfferContent content = new OfferContent();
+
             return null;
         }
 

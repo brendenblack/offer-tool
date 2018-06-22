@@ -3,6 +3,7 @@ package com.kixeye.analytics.offertool.domain.offers;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.kixeye.analytics.offertool.domain.models.Offer;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import java.util.Map;
 @Setter
 @ToString
 @JsonDeserialize(using = OfferContentDeserializer.class)
+@JsonSerialize(using = OfferContentSerializer.class)
 public class OfferContent
 {
     private List<OfferContentUnit> units = new ArrayList<>();
@@ -40,5 +42,5 @@ public class OfferContent
 
     private Map<String, Integer> skus = new HashMap<>();
 
-    private int gold;
+    private int gold = -1;
 }
