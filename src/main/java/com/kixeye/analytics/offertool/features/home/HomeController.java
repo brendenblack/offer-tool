@@ -2,9 +2,11 @@ package com.kixeye.analytics.offertool.features.home;
 
 import com.google.common.collect.Lists;
 import com.kixeye.analytics.offertool.domain.models.Offer;
+import com.kixeye.analytics.offertool.infrastructure.mediator.Mediator;
 import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,9 +21,12 @@ public class HomeController
 {
     private final Logger log = LoggerFactory.getLogger(HomeController.class);
     private final Context context;
+    private final Mediator mediator;
 
-    public HomeController(Context context)
+    @Autowired
+    public HomeController(Mediator mediator, Context context)
     {
+        this.mediator = mediator;
         this.context = context;
     }
 
@@ -41,5 +46,11 @@ public class HomeController
         return results;
 
 
+    }
+
+    @GetMapping(path = "/test")
+    public void doTest()
+    {
+        this.mediator.send(new Test.Command(), Test.Model.class);
     }
 }

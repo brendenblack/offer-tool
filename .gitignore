@@ -77,3 +77,4 @@ target/
 
 
 application-dev.properties
+resources/client_secret.json

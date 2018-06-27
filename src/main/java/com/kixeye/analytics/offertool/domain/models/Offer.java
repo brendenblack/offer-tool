@@ -39,8 +39,7 @@ public class Offer
         if (offerCode.length() > 20)
         {
             this.offerCode = offerCode.substring(0, 19);
-        }
-        else
+        } else
         {
             this.offerCode = offerCode;
         }
@@ -62,8 +61,8 @@ public class Offer
     @Column(nullable = true)
     private Integer cooldown;
 
-//    @Column(name = "cooldown_type")
-//    private int cooldownType;
+    @Column(name = "cooldown_type")
+    private int cooldownType;
 
     @Column(name = "pre_req")
     private String prerequisiteOfferCode;
@@ -89,9 +88,12 @@ public class Offer
     private Integer templateId;
 
     @Column(name = "displayed_items")
+    @Setter(AccessLevel.NONE)
     private String displayedItemsJson;
 
     @Transient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private List<OfferDisplayedItem> displayedItems = new ArrayList<>();
 
     public List<OfferDisplayedItem> getDisplayedItems()
@@ -101,13 +103,13 @@ public class Offer
             try
             {
                 ObjectMapper mapper = new ObjectMapper();
-                List<OfferDisplayedItem> items = mapper.readValue(this.displayedItemsJson, new TypeReference<List<OfferDisplayedItem>>() {
+                List<OfferDisplayedItem> items = mapper.readValue(this.displayedItemsJson, new TypeReference<List<OfferDisplayedItem>>()
+                {
                 });
 
                 this.displayedItems.clear();
                 this.displayedItems.addAll(items);
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 log.error("", e);
             }
@@ -115,6 +117,12 @@ public class Offer
 
         return this.displayedItems;
     }
+
+    public void addDisplayedItem(String sku, int amount, int order)
+    {
+
+    }
+
 
     @Column(name = "display_options")
     private String displayedOptions;
@@ -133,11 +141,14 @@ public class Offer
      */
     public OfferContent getContent()
     {
-        if (content == null) {
+        if (content == null)
+        {
             ObjectMapper objectMapper = new ObjectMapper();
-            try {
+            try
+            {
                 this.content = objectMapper.readValue(this.contentJson, OfferContent.class);
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 log.error("An error occurred while hydrating blog {}", this.contentJson, e);
                 this.content = null;
             }
@@ -148,7 +159,14 @@ public class Offer
 
     public void setContent(OfferContent content)
     {
-        // TODO: serialize content
+        ObjectMapper mapper = new ObjectMapper();
+        try
+        {
+            this.contentJson = mapper.writeValueAsString(content);
+        } catch (IOException e)
+        {
+            log.error("An error occurred while serializing offer content: {}", content.toString(), e);
+        }
     }
     //endregion
 
@@ -173,8 +191,7 @@ public class Offer
         if (deleted > 0)
         {
             this.deleted = 1;
-        }
-        else
+        } else
         {
             this.deleted = 0;
         }
@@ -201,8 +218,7 @@ public class Offer
         if (enabled > 0)
         {
             this.enabled = 1;
-        }
-        else
+        } else
         {
             this.enabled = 0;
         }
@@ -212,5 +228,4 @@ public class Offer
     {
         this.enabled = (enabled) ? 1 : 0;
     }
-
 }

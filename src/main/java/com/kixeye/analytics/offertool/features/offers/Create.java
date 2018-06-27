@@ -1,5 +1,6 @@
 package com.kixeye.analytics.offertool.features.offers;
 
+import com.kixeye.analytics.offertool.domain.models.Offer;
 import com.kixeye.analytics.offertool.domain.offers.OfferContent;
 import com.kixeye.analytics.offertool.domain.offers.OfferContentUnit;
 import com.kixeye.analytics.offertool.domain.offers.OfferContentUnitUnlock;
@@ -31,14 +32,10 @@ public class Create
         private List<OfferUnitsCommand> unitsOffered = new ArrayList<>();
 
         private List<OfferTechCommand> techOffered = new ArrayList<>();
-    }
 
-    @Getter
-    @Setter
-    public static class UnitCommand
-    {
-        private int unitId;
-        private boolean display;
+        private List<OfferTokenCommand> tokensOffered = new ArrayList<>();
+
+        private List<OfferPartCommand> partsOffered = new ArrayList<>();
     }
 
     @Getter
@@ -57,6 +54,23 @@ public class Create
     public static class OfferTechCommand
     {
         private String id;
+    }
+
+    @Getter
+    @Setter
+    public static class OfferTokenCommand
+    {
+        private String tokenName;
+        private int amount;
+        private boolean display = true;
+    }
+
+    @Getter
+    @Setter
+    public static class OfferPartCommand
+    {
+        private String partName;
+        private int amount;
     }
 
     @Getter
@@ -81,9 +95,39 @@ public class Create
         @Override
         public Model handle(Command message)
         {
-            List<OfferContentUnitUnlock> unlocks = new ArrayList<>();
-            List<OfferContentUnit> units = new ArrayList<>();
+            Offer offer = new Offer();
+            offer.setOfferCode(message.getCode());
+            offer.setCost(message.getCost());
+            offer.setFullCost(message.getFullCost());
+            offer.setCooldown(0);
+            offer.setCooldownType(0);
+
+
+
+
             OfferContent content = new OfferContent();
+            List<OfferContentUnitUnlock> unitUnlocks = new ArrayList<>();
+            List<OfferContentUnit> units = new ArrayList<>();
+
+            for (OfferUnitsCommand unit : message.getUnitsOffered())
+            {
+                if (unit.isUnlock())
+                {
+
+                }
+
+                if (unit.isDisplay())
+                {}
+            }
+
+            for (OfferTokenCommand token : message.getTokensOffered())
+            {
+                content.getSkus().put(token.getTokenName(), token.getAmount());
+                if (token.isDisplay())
+                {
+                    //offer.addDisplayedItem();
+                }
+            }
 
             return null;
         }
