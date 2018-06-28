@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         }
         ObjectMapper mapper = new ObjectMapper();
         Map<String,String> map = new HashMap<>();
+        map.put("message", e.getMessage());
+        map.put("timestamp", new Date().toString());
+        map.put("path", request.getContextPath());
+        String body = mapper.writeValueAsString(map);
+        return handleExceptionInternal(e, body, headers, status, request);
+    }
+
+    @ExceptionHandler(value = SQLException.class)
+    protected ResponseEntity handleConflict(SQLException e, WebRequest request) throws JsonProcessingException
+    {
+        HttpStatus status =  HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String,String> map = new HashMap<>();
+        // TODO: if dev mode show error message, else show friendly message
         map.put("message", e.getMessage());
         map.put("timestamp", new Date().toString());
         map.put("path", request.getContextPath());
