@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,13 +27,12 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
-
 @Service
 public class GoogleApiService
 {
     private final Logger log = LoggerFactory.getLogger(GoogleApiService.class);
     private static final String APPLICATION_NAME = "Offer Tool";
-    private static final String CREDENTIALS_FOLDER = "credentials"; // Directory to store user credentials.
+    private static final String CREDENTIALS_FOLDER = "credenrials"; // Directory to store user credentials.
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -61,11 +61,16 @@ public class GoogleApiService
         log.debug("JSON Factory: {}", jsonFactory.toString());
         log.debug("Scopes: {}", SCOPES);
 
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                httpTransport, jsonFactory, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(CREDENTIALS_FOLDER)))
+        File credentialsFolder = new File(CREDENTIALS_FOLDER);
+        log.debug("Credentials folder: {} (exists?: {})", credentialsFolder.getAbsoluteFile(), credentialsFolder.exists());
+
+        GoogleAuthorizationCodeFlow.Builder flowBuilder = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, clientSecrets, SCOPES);
+        log.debug(flowBuilder.toString());
+        GoogleAuthorizationCodeFlow flow = flowBuilder.setDataStoreFactory(new FileDataStoreFactory(credentialsFolder))
                 .setAccessType("offline")
                 .build();
+
+        log.debug(flow.toString());
 
         Credential credential = getCredentials(httpTransport, jsonFactory);
 
@@ -106,7 +111,7 @@ public class GoogleApiService
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(CREDENTIALS_FOLDER)))
+                .setDataStoreFactory(new FileDataStoreFactory(new File(CREDENTIALS_FOLDER)))
                 .setAccessType("offline")
                 .build();
 
@@ -134,7 +139,7 @@ public class GoogleApiService
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 httpTransport, jsonFactory, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(CREDENTIALS_FOLDER)))
+                .setDataStoreFactory(new FileDataStoreFactory(new File(CREDENTIALS_FOLDER)))
                 .setAccessType("offline")
                 .build();
 
