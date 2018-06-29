@@ -1,6 +1,10 @@
 package com.kixeye.analytics.offertool.domain.models.snowflake;
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Offer
 {
     public final static String ID = "ID";
@@ -16,9 +20,29 @@ public class Offer
     public final static String FULL_COST = "FULL_COST";
     public final static String TITLE = "TITLE";
     public final static String DESCRIPTION = "DESC";
+    public final static String ICON_TITLE = "ICON_TITLE";
+    public final static String ICON_DESCRIPTION = "ICON_DESC";
     public final static String TEMPLATE_ID = "TEMPLATE_ID";
     public final static String MODIFIED_TIME = "MOD_TIME";
     public final static String CREATED_TIME = "CREATED_TIME";
     public final static String IS_DELETED = "IS_DELETED";
     public final static String IS_ENABLED = "IS_ENABLED";
+
+    private int id;
+    private String offerCode;
+    private long duration;
+    private String content;
+    private String displayOptions;
+    private String displayedItems;
+    private long startTime;
+    private long endTime;
+    private long createdTime;
+    private long modifiedTime;
+    private int cost;
+    private int fullCost;
+    private String costSku = "gold";
+    private int maxQuantity;
+    private boolean enabled;
+    private boolean deleted;
+
 }

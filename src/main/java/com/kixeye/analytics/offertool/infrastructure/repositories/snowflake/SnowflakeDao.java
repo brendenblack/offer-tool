@@ -16,6 +16,8 @@ public class SnowflakeDao
     private final Logger log = LoggerFactory.getLogger(SnowflakeDao.class);
     private final DataSource dataSource;
 
+    public static String OFFERS_TABLE = "WC.MYSQL.OFFERS_WC";
+
 // https://www.developer.com/db/working-with-jdbc-and-spring.html
 
     SnowflakeDao(@Qualifier("snowflakeDataSource") DataSource dataSource)
@@ -52,40 +54,6 @@ public class SnowflakeDao
         for (int i = 0; i < values.length; i++)
         {
             preparedStatement.setObject(i + 1, values[i]);
-        }
-    }
-
-
-    public ResultSet execute(String sql, Object... values) throws SQLException
-    {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try
-        {
-            connection = this.dataSource.getConnection();
-            ps = prepareStatement(connection, sql, false, values);
-            rs = ps.executeQuery();
-
-            rs.close();
-            ps.close();
-
-        }
-        finally
-        {
-            if (connection != null)
-            {
-                try
-                {
-                    connection.close();
-                }
-                catch (SQLException e)
-                {
-                    log.error("An error occurred while closing connection", e);
-
-                }
-            }
         }
     }
 }
