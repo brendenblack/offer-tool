@@ -15,35 +15,35 @@ import java.util.Properties;
 // https://docs.snowflake.net/manuals/user-guide/jdbc-configure.html
 // http://www.baeldung.com/spring-boot-custom-auto-configuration
 @Configuration
-public class SnowflakeDataSourceConfiguration
+public class SnowflakeConfiguration
 {
     @Value("${kixeye.snowflake.username}") String username;
     @Value("${kixeye.snowflake.password}") String password;
     @Value("${kixeye.snowflake.account}") String account;
-    @Value("${kixeye.snowflake.db}") String db;
-    @Value("${kixeye.snowflake.schema}") String schema;
-    @Value("${kixeye.snowflake.connection-string") String connString;
+    @Value("${kixeye.snowflake.db:nodb}") String db;
+    @Value("${kixeye.snowflake.schema:noschema}") String schema;
+    @Value("${kixeye.snowflake.connection-string}") String connString;
 
-    public Connection getConnection() throws SQLException
-    {
-        Properties properties = new Properties();
-        properties.put("user", this.username);
-        properties.put("password", this.password);
-        properties.put("account", this.account);
-        properties.put("db", this.db);
-        properties.put("schema", this.schema);
+//    public Connection getConnection() throws SQLException
+//    {
+//        Properties properties = new Properties();
+//        properties.put("user", this.username);
+//        properties.put("password", this.password);
+////        properties.put("account", this.account);
+//        properties.put("db", this.db);
+//        properties.put("schema", this.schema);
+//
+//        return DriverManager.getConnection(this.connString, properties);
+//    }
 
-        return DriverManager.getConnection(this.connString, properties);
-    }
-
-    @Bean
+    @Bean(name = "snowflakeDataSource")
     @ConfigurationProperties(prefix="kixeye.snowflake")
     public DataSource dataSource()
     {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
         dataSource.setDriverClassName("net.snowflake.client.jdbc.SnowflakeDriver");
-        dataSource.setUrl(this.connString); // "jdbc:mysql://localhost:3306/myDb?createDatabaseIfNotExist=true");
+        dataSource.setUrl(this.connString);
         dataSource.setUsername(this.username);
         dataSource.setPassword(this.password);
 

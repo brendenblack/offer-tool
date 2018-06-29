@@ -4,6 +4,7 @@ import com.kixeye.analytics.offertool.domain.models.Offer;
 import com.kixeye.analytics.offertool.infrastructure.RestException;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
+import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.SnowflakeContext;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class GetOffer
     public static class Query
     {
         private int offerId;
+        private String offerCode;
     }
 
     @Getter
@@ -35,10 +37,10 @@ public class GetOffer
     public static class Handler implements RequestHandler<Query,Model>
     {
         private final Logger log = LoggerFactory.getLogger(Handler.class);
-        private final Context context;
+        private final SnowflakeContext context;
 
         @Autowired
-        Handler(Context context)
+        Handler(SnowflakeContext context)
         {
             this.context = context;
         }
@@ -46,7 +48,13 @@ public class GetOffer
         @Override
         public Model handle(Query message)
         {
-            Optional<Offer> offerResult = this.context.getOffers().findById(message.getOfferId());
+            Optional<Offer> offerResult = Optional.empty();
+
+                offerResult = (message.getOfferId() > 0)
+                    ? this.context.getOffers().findById(message.getOfferId())
+                    : this.context.getOffers().findByCode(message.getOfferCode());
+
+
             if (!offerResult.isPresent())
             {
                 throw new RestException(HttpStatus.NOT_FOUND, "Unable to find an offer with id " + message.getOfferId());

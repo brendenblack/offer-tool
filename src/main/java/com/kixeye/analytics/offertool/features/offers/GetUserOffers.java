@@ -2,7 +2,7 @@ package com.kixeye.analytics.offertool.features.offers;
 
 import com.kixeye.analytics.offertool.domain.models.UserOffer;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
-import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
+import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.SnowflakeContext;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GetUserOffers
 {
@@ -48,10 +47,10 @@ public class GetUserOffers
     public static class Handler implements RequestHandler<Query,Model>
     {
         private final Logger log = LoggerFactory.getLogger(Handler.class);
-        private final Context context;
+        private final SnowflakeContext context;
 
         @Autowired
-        Handler(Context context)
+        Handler(SnowflakeContext context)
         {
             this.context = context;
         }
@@ -62,14 +61,14 @@ public class GetUserOffers
             log.debug("Fetching user offers for offer {}", message.getOfferId());
 
             Model result = new Model();
-
-            for (UserOffer userOffer: this.context.getUserOffers().findByOfferId(message.getOfferId()))
+            List<UserOffer> userOffers = this.context.getOffers().findUserOffers(message.getOfferId());
+            for (UserOffer userOffer : userOffers)
             {
                 result.setNumberOffered(result.getNumberOffered() + 1);
                 log.trace(userOffer.toString());
                 UserOfferModel model = new UserOfferModel();
                 model.setNumberPurchased(userOffer.getAmountPurchased());
-                // int id = Optional.of(userOffer).map(x -> x.getUser()).map(u -> u.getUserid()).orElse(0);
+                // int id = Optional.of(userOffer).mapOffer(x -> x.getUser()).mapOffer(u -> u.getUserid()).orElse(0);
 //                switch (userOffer.getStatus())
 //                {}
                 model.setUserId(userOffer.getUserId());

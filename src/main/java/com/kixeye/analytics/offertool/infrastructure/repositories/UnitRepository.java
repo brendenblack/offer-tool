@@ -1,10 +1,8 @@
 package com.kixeye.analytics.offertool.infrastructure.repositories;
 
-import com.kixeye.analytics.offertool.domain.UnitTypes;
+import com.kixeye.analytics.offertool.domain.UnitClassifications;
 import com.kixeye.analytics.offertool.domain.models.Faction;
 import com.kixeye.analytics.offertool.domain.models.Unit;
-import com.kixeye.analytics.offertool.domain.UnitClassifications;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -145,7 +143,6 @@ public class UnitRepository
 
 
                 Unit unit = builder.ofGeneration(generation).build();
-
                 this.units.add(unit);
             }
         }

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/offers")
 public class OffersController
@@ -45,6 +43,15 @@ public class OffersController
     {
         GetOffer.Query message = new GetOffer.Query();
         message.setOfferId(offerId);
+
+        return this.mediator.send(message, GetOffer.Model.class);
+    }
+
+    @GetMapping(path = "/{offerCode}")
+    public GetOffer.Model getOffer(@PathVariable String offerCode)
+    {
+        GetOffer.Query message = new GetOffer.Query();
+        message.setOfferCode(offerCode);
 
         return this.mediator.send(message, GetOffer.Model.class);
     }

@@ -51,8 +51,8 @@ public class OfferContentDeserializer extends StdDeserializer<OfferContent>
             {
                 int type = unitNode.get("type").asInt(-1);
                 int amount = unitNode.get("amount").asInt(1);
-                int level = unitNode.get("level").asInt(1);
-                int promotion = unitNode.get("promotion").asInt(0);
+                int level = Optional.ofNullable(unitNode.get("level")).map(node -> node.asInt(1)).orElse(1);
+                int promotion = Optional.ofNullable(unitNode.get("promotion")).map(node -> node.asInt(2)).orElse(2);
 
                 OfferContentUnit ocu = new OfferContentUnit();
                 ocu.setType(type);
