@@ -59,7 +59,7 @@ public class GetAll
 
         public double getApproximateRevenue()
         {
-            return this.cost * .85 * .1 * this.uniquePurchased;
+            return (this.costSku.equalsIgnoreCase("gold")) ? this.cost * .85 * .1 * this.uniquePurchased : 0.0;
         }
     }
 
