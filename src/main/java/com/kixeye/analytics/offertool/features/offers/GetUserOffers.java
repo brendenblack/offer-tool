@@ -61,28 +61,28 @@ public class GetUserOffers
             log.debug("Fetching user offers for offer {}", message.getOfferId());
 
             Model result = new Model();
-            List<UserOffer> userOffers = this.context.getOffers().findUserOffers(message.getOfferId());
-            for (UserOffer userOffer : userOffers)
-            {
-                result.setNumberOffered(result.getNumberOffered() + 1);
-                log.trace(userOffer.toString());
-                UserOfferModel model = new UserOfferModel();
-                model.setNumberPurchased(userOffer.getAmountPurchased());
-                // int id = Optional.of(userOffer).mapOffer(x -> x.getUser()).mapOffer(u -> u.getUserid()).orElse(0);
-//                switch (userOffer.getStatus())
-//                {}
-                model.setUserId(userOffer.getUserId());
-
-
-                if (userOffer.getAmountPurchased() > 0)
-                {
-                    result.setTotalPurchased(result.getTotalPurchased() + userOffer.getAmountPurchased());
-                    result.setUniquePurchased(result.getUniquePurchased() + 1);
-                }
-
-                result.getUserOffers().add(model);
-
-            }
+//            List<UserOffer> userOffers = this.context.getOffers().findUserOffers(message.getOfferId());
+//            for (UserOffer userOffer : userOffers)
+//            {
+//                result.setNumberOffered(result.getNumberOffered() + 1);
+//                log.trace(userOffer.toString());
+//                UserOfferModel model = new UserOfferModel();
+//                model.setNumberPurchased(userOffer.getAmountPurchased());
+//                // int id = Optional.of(userOffer).mapOffer(x -> x.getUser()).mapOffer(u -> u.getUserid()).orElse(0);
+////                switch (userOffer.getStatus())
+////                {}
+//                model.setUserId(userOffer.getUserId());
+//
+//
+//                if (userOffer.getAmountPurchased() > 0)
+//                {
+//                    result.setTotalPurchased(result.getTotalPurchased() + userOffer.getAmountPurchased());
+//                    result.setUniquePurchased(result.getUniquePurchased() + 1);
+//                }
+//
+//                result.getUserOffers().add(model);
+//
+//            }
 
             return result;
         }

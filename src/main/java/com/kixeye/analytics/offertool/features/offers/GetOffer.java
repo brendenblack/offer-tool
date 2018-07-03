@@ -1,9 +1,10 @@
 package com.kixeye.analytics.offertool.features.offers;
 
-import com.kixeye.analytics.offertool.domain.models.Offer;
+import com.kixeye.analytics.offertool.domain.models.snowflake.Offer;
 import com.kixeye.analytics.offertool.infrastructure.RestException;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.Context;
+import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.OfferRowMapper;
 import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.SnowflakeContext;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class GetOffer
@@ -48,19 +52,10 @@ public class GetOffer
         @Override
         public Model handle(Query message)
         {
-            Optional<Offer> offerResult = Optional.empty();
-
-                offerResult = (message.getOfferId() > 0)
-                    ? this.context.getOffers().findById(message.getOfferId())
-                    : this.context.getOffers().findByCode(message.getOfferCode());
-
-
-            if (!offerResult.isPresent())
-            {
-                throw new RestException(HttpStatus.NOT_FOUND, "Unable to find an offer with id " + message.getOfferId());
-            }
-
-            Offer offer = offerResult.get();
+            String query = "select * from WC.MYSQL.OFFERS_WC where OFFER_CODE = :offerCode";
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put("offerCode", message.getOfferCode());
+            Offer offer = this.context.getParameterJdbc().queryForObject(query, parameters, new OfferRowMapper());
 
             Model model = new Model();
             model.setId(offer.getId());

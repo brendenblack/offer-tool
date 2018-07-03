@@ -2,9 +2,11 @@ package com.kixeye.analytics.offertool.domain.models.snowflake;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class Offer
 {
     public final static String ID = "ID";
@@ -44,5 +46,9 @@ public class Offer
     private int maxQuantity;
     private boolean enabled;
     private boolean deleted;
+    private String title;
+    private String description;
+    private String iconTitle;
+    private String iconDescription;
 
 }

@@ -6,6 +6,9 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Maps a row in the WC.MYSQL.OFFERS_WC table to an {@link Offer} object
+ */
 public class OfferRowMapper implements RowMapper<Offer>
 {
 
@@ -16,6 +19,10 @@ public class OfferRowMapper implements RowMapper<Offer>
 
         offer.setOfferCode(rs.getString(Offer.OFFER_CODE));
         offer.setId(rs.getInt(Offer.ID));
+        offer.setTitle(rs.getString(Offer.TITLE));
+        offer.setDescription(rs.getString(Offer.DESCRIPTION));
+        offer.setIconTitle(rs.getString(Offer.ICON_TITLE));
+        offer.setIconDescription(rs.getString(Offer.ICON_DESCRIPTION));
         offer.setContent(rs.getString(Offer.CONTENT));
         offer.setDisplayedItems(rs.getString(Offer.DISPLAYED_ITEMS));
         offer.setDuration(rs.getLong(Offer.DURATION));

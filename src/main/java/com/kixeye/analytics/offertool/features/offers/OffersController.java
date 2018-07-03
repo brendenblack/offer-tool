@@ -2,12 +2,7 @@ package com.kixeye.analytics.offertool.features.offers;
 
 import com.kixeye.analytics.offertool.infrastructure.mediator.Mediator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/offers")
@@ -39,14 +34,14 @@ public class OffersController
         return this.mediator.send(message, GetUserOffers.Model.class);
     }
 
-    @GetMapping(path = "/{offerId}")
-    public GetOffer.Model getOffer(@PathVariable int offerId)
-    {
-        GetOffer.Query message = new GetOffer.Query();
-        message.setOfferId(offerId);
-
-        return this.mediator.send(message, GetOffer.Model.class);
-    }
+//    @GetMapping(path = "/{offerId}")
+//    public GetOffer.Model getOffer(@PathVariable int offerId)
+//    {
+//        GetOffer.Query message = new GetOffer.Query();
+//        message.setOfferId(offerId);
+//
+//        return this.mediator.send(message, GetOffer.Model.class);
+//    }
 
     @GetMapping(path = "/{offerCode}")
     public GetOffer.Model getOffer(@PathVariable String offerCode)
@@ -57,7 +52,7 @@ public class OffersController
         return this.mediator.send(message, GetOffer.Model.class);
     }
 
-    @GetMapping(path = "/clone")
+    @PutMapping(path = "/clone")
     public CloneOffers.Model doGenerateClonedOffers(@RequestBody CloneOffers.Command message)
     {
         return this.mediator.send(message, CloneOffers.Model.class);

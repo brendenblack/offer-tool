@@ -32,6 +32,7 @@ public class Offer
 //    @Column(name = "offer_code")
     private String offerCode;
 
+
 //    @Column(name = "start_time")
     private Long startTime;
 

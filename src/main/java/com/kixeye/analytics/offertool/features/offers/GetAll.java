@@ -1,8 +1,6 @@
 package com.kixeye.analytics.offertool.features.offers;
 
-import com.kixeye.analytics.offertool.domain.models.Offer;
 import com.kixeye.analytics.offertool.domain.models.OfferSummary;
-import com.kixeye.analytics.offertool.infrastructure.RestException;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.SnowflakeContext;
 import lombok.Getter;
@@ -11,10 +9,10 @@ import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +23,13 @@ public class GetAll
     public static class Query
     {
         private boolean onlyActive = false;
-
     }
 
     @Getter
     @Setter
     public static class Model
     {
-        public List<OfferSummary> offers = new ArrayList<>();
+        public List<OfferModel> offers = new ArrayList<>();
     }
 
     @Getter
@@ -40,25 +37,43 @@ public class GetAll
     @ToString
     public static class OfferModel
     {
-        private String offerCode;
-        private long startTime;
-        private long endTime;
-        private long duration;
         private int id;
-        private boolean active;
+
+        private String offerCode;
+
+        private String title;
+
+        private int cost;
+
+        private String costSku = "gold";
+
+        private long duration;
+
+        private long startTime;
+
+        private long endTime;
+
+        private int uniquePurchased;
+
+        private int cohortSize;
+
+        public double getApproximateRevenue()
+        {
+            return this.cost * .85 * .1 * this.uniquePurchased;
+        }
     }
 
     @Service("getAllOffers")
     public static class Handler implements RequestHandler<Query, Model>
     {
         private final Logger log = LoggerFactory.getLogger(Handler.class);
-        private final SnowflakeContext context;
+        private final NamedParameterJdbcTemplate jdbc;
 
 
         @Autowired
-        Handler(SnowflakeContext context)
+        Handler(@Qualifier("snowflakeNamedJdbc") NamedParameterJdbcTemplate jdbc)
         {
-            this.context = context;
+            this.jdbc = jdbc;
         }
 
         @Override
@@ -66,42 +81,42 @@ public class GetAll
         {
             log.info("Retrieving all offers");
 
+            String sql = "SELECT o.id, offer_code, title, cost, start_time, end_time, duration, offerednumbers.*, purchasenumbers.* \n" +
+                    "FROM wc.mysql.offers_wc o \n" +
+                    "JOIN (\n" +
+                    "    SELECT offer_id, COUNT(*) AS \"unique_purchased\" \n" +
+                    "    FROM wc.mysql.user_offers_wc uo\n" +
+                    "    WHERE uo.status = 2\n" +
+                    "    GROUP BY uo.offer_id \n" +
+                    ") purchasenumbers\n" +
+                    "ON o.id = purchasenumbers.offer_id\n" +
+                    "JOIN (\n" +
+                    "    SELECT offer_id, COUNT(*) AS \"offered\"\n" +
+                    "    FROM wc.mysql.user_offers_wc uo\n" +
+                    "    GROUP BY uo.offer_id\n" +
+                    ") offerednumbers\n" +
+                    "ON o.id = offerednumbers.offer_id\n" +
+                    "WHERE cost > 0;";
+
+            List<OfferModel> summaries = this.jdbc.query(sql, (rs, rowNum) -> {
+               OfferModel summary = new OfferModel();
+                summary.setId(rs.getInt("ID"));
+                summary.setOfferCode(rs.getString("OFFER_CODE"));
+                summary.setTitle(rs.getString("TITLE"));
+                summary.setCost(rs.getInt("COST"));
+                summary.setStartTime(rs.getLong("START_TIME"));
+                summary.setEndTime(rs.getLong("END_TIME"));
+                summary.setDuration(rs.getLong("DURATION"));
+                summary.setUniquePurchased(rs.getInt("unique_purchased"));
+                summary.setCohortSize(rs.getInt("offered"));
+               return summary;
+            });
+
+
             Model model = new Model();
-            model.setOffers(this.context.getOffers().findAllSummaries());
+            model.setOffers(summaries);
             return model;
 
-//
-//            List<OfferModel> models = new ArrayList<>();
-//
-//            long now = Instant.now().toEpochMilli() / 1000;
-//
-//            Iterable<Offer> offers = new ArrayList<>();
-////            message.isOnlyActive())
-////                    ? this.context.findAll().findAllActive()
-////                    : this.context.findAll().findAll();
-//
-//
-//            for (Offer offer : this.context.getOffers().findAll())
-//            {
-//                log.debug(offer.toString());
-//                OfferModel o = new OfferModel();
-//                o.setId(offer.getId());
-//                o.setOfferCode(offer.getOfferCode());
-//                o.setDuration(offer.getDuration());
-//                o.setStartTime(offer.getStartTime());
-//                o.setEndTime(offer.getEndTime());
-//                boolean isActive = offer.getEndTime() > now;
-//                log.debug("[end time: {}] [now: {}] [active?: {}]", offer.getEndTime(), now, isActive);
-//
-//                o.setActive(isActive);
-//                log.debug(offer.toString());
-//                models.add(o);
-//            }
-//
-//            Model result = new Model();
-//            result.setOffers(models);
-//
-//            return result;
         }
 
         @Override
