@@ -36,6 +36,7 @@ public class OfferRowMapper implements RowMapper<Offer>
         offer.setModifiedTime(rs.getLong(Offer.MODIFIED_TIME));
         offer.setEnabled(rs.getBoolean(Offer.IS_ENABLED));
         offer.setDeleted(rs.getBoolean(Offer.IS_DELETED));
+        offer.setDisplayOptions(rs.getString(Offer.DISPLAY_OPTIONS));
 
         return offer;
     }

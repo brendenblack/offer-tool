@@ -29,6 +29,7 @@ public class Offer
     public final static String CREATED_TIME = "CREATED_TIME";
     public final static String IS_DELETED = "IS_DELETED";
     public final static String IS_ENABLED = "IS_ENABLED";
+    public final static String PREREQUISITE = "PRE_REQ";
 
     private int id;
     private String offerCode;
@@ -50,5 +51,6 @@ public class Offer
     private String description;
     private String iconTitle;
     private String iconDescription;
+    private String prerequisite = "";
 
 }
