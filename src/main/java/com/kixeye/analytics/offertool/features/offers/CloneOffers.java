@@ -64,7 +64,7 @@ public class CloneOffers
         @Override
         public Model handle(Command message)
         {
-
+            return new Model();
         }
 
 //        @Override
