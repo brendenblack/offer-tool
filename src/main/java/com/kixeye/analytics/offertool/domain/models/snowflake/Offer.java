@@ -30,6 +30,7 @@ public class Offer
     public final static String IS_DELETED = "IS_DELETED";
     public final static String IS_ENABLED = "IS_ENABLED";
     public final static String PREREQUISITE = "PRE_REQ";
+    public final static String PRIORITY = "PRIORITY";
 
     private int id;
     private String offerCode;
@@ -52,5 +53,6 @@ public class Offer
     private String iconTitle;
     private String iconDescription;
     private String prerequisite = "";
+    private int priority;
 
 }

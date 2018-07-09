@@ -64,28 +64,27 @@ public class CloneOffers
         @Override
         public Model handle(Command message)
         {
+            List<Integer> allIds = message.getTargets().stream().map(t -> t.getId()).collect(Collectors.toList());
+            String ids = allIds.toString();
+            ids = ids.substring(1, ids.length() - 1); // strip the surrounding brackets [ ]
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("select * from WC.MYSQL.OFFERS_WC where ID in (")
+                    .append(ids)
+                    .append(")");
+            String query = sb.toString();
+
+            Map<String, List<Integer>> namedParameters = new HashMap<>();
+            namedParameters.put("ids", allIds);
+
+            log.debug("Executing query: {}\nUsing parameters: {}", query, namedParameters.toString());
+
+            List<Offer> offers = this.context.getParameterJdbc().query(query, namedParameters, new OfferRowMapper());
+
+            // TODO
+
             return new Model();
         }
-
-//        @Override
-//        public Model handle(Command message)
-//        {
-//            List<Integer> allIds = message.getTargets().stream().map(t -> t.getId()).collect(Collectors.toList());
-//            String ids = allIds.toString();
-//            ids = ids.substring(1, ids.length() - 1); // strip the surrounding brackets [ ]
-//
-//            StringBuilder sb = new StringBuilder();
-//            sb.append("select * from WC.MYSQL.OFFERS_WC where ID in (")
-//                    .append(ids)
-//                    .append(")");
-//            String query = sb.toString();
-//
-//            Map<String, List<Integer>> namedParameters = new HashMap<>();
-//            namedParameters.put("ids", allIds);
-//
-//            log.debug("Executing query: {}\nUsing parameters: {}", query, namedParameters.toString());
-//
-//            List<Offer> offers = this.context.getParameterJdbc().query(query, namedParameters, new OfferRowMapper());
 //
 //            DSLContext create = using(SQLDialect.MYSQL, new Settings().withRenderFormatted(true));
 //            InsertValuesStep17<Record, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object> insert = create.insertInto(table("offers"),

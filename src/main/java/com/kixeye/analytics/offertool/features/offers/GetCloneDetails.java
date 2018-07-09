@@ -1,5 +1,6 @@
 package com.kixeye.analytics.offertool.features.offers;
 
+import com.kixeye.analytics.offertool.domain.models.snowflake.Offer;
 import com.kixeye.analytics.offertool.infrastructure.mediator.RequestHandler;
 import com.kixeye.analytics.offertool.infrastructure.repositories.snowflake.SnowflakeContext;
 import lombok.Getter;
@@ -11,8 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GetCloneDetails
 {
@@ -47,6 +47,8 @@ public class GetCloneDetails
         private String costSku;
         private long duration;
         private int templateId;
+        private int priority;
+        private String prerequisite;
     }
 
     @Service("getCloneDetailsHandler")
@@ -65,38 +67,62 @@ public class GetCloneDetails
         @Override
         public Model handle(Query message)
         {
-            for (int id : message.getOfferIds())
-            {
 
-                String sql = "SELECT o.id, offer_code, title, cost, start_time, end_time, duration, offerednumbers.*, purchasenumbers.* \n" +
-                        "FROM wc.mysql.offers_wc o \n" +
-                        "JOIN (\n" +
-                        "    SELECT offer_id, COUNT(*) AS \"unique_purchased\" \n" +
-                        "    FROM wc.mysql.user_offers_wc uo\n" +
-                        "    WHERE uo.status = 2\n" +
-                        "    GROUP BY uo.offer_id \n" +
-                        ") purchasenumbers\n" +
-                        "ON o.id = purchasenumbers.offer_id\n" +
-                        "JOIN (\n" +
-                        "    SELECT offer_id, COUNT(*) AS \"offered\"\n" +
-                        "    FROM wc.mysql.user_offers_wc uo\n" +
-                        "    GROUP BY uo.offer_id\n" +
-                        ") offerednumbers\n" +
-                        "ON o.id = offerednumbers.offer_id\n" +
-                        "WHERE cost > 0;";
+            log.info("Received request to look up clone details for offers {}", message.getOfferIds());
 
-                List<CloneModel> clones = this.jdbc.query(sql, (rs, rowNum) -> {
+            String sql = "select\n" +
+                    "  o.ID,\n" +
+                    "  o.TITLE,\n" +
+                    "  o.DESC,\n" +
+                    "  o.ICON_TITLE,\n" +
+                    "  o.ICON_DESC,\n" +
+                    "  o.COST,\n" +
+                    "  o.FULL_COST,\n" +
+                    "  o.COST_SKU,\n" +
+                    "  o.TEMPLATE_ID,\n" +
+                    "  o.DISPLAYED_ITEMS,\n" +
+                    "  o.DISPLAY_OPTIONS,\n" +
+                    "  o.CONTENT,\n" +
+//                    "  o.START_TIME,\n" +
+//                    "  o.END_TIME,\n" +
+                    "  o.DURATION,\n" +
+                    "  o.TEMPLATE_ID,\n" +
+                    "  o.PRIORITY,\n" +
+                    "  o.MAX_QTY,\n" +
+                    "  o.PRE_REQ\n" +
+                    "from \n" +
+                    "  WC.MYSQL.OFFERS_WC o\n" +
+                    "where\n" +
+                    "  o.id in (:offerIds);";
+
+            log.debug("Query: {}", sql);
+
+            Map<String, List<Integer>> parameters = Collections.singletonMap("offerIds", message.getOfferIds());
+
+            List<CloneModel> clones = this.jdbc.query(sql, parameters, (rs, rowNum) -> {
                     CloneModel clone = new CloneModel();
-                    clone.setId(rs.getInt("ID"));
-                    clone.setOfferCode(rs.getString("OFFER_CODE"));
-                    clone.setTitle(rs.getString("TITLE"));
-                    clone.setCost(rs.getInt("COST"));
-                    clone.setDuration(rs.getLong("DURATION"));
-                    return summary;
+                    clone.setId(rs.getInt(Offer.ID));
+                    clone.setTitle(rs.getString(Offer.TITLE));
+                    clone.setDescription(rs.getString(Offer.DESCRIPTION));
+                    clone.setCost(rs.getInt(Offer.COST));
+                    clone.setFullCost(rs.getInt(Offer.FULL_COST));
+                    clone.setIconTitle(rs.getString(Offer.ICON_TITLE));
+                    clone.setIconDescription(rs.getString(Offer.ICON_DESCRIPTION));
+                    clone.setCostSku(Optional.ofNullable(rs.getString(Offer.COST_SKU)).orElse("gold"));
+                    clone.setTemplateId(rs.getInt(Offer.TEMPLATE_ID));
+                    clone.setDisplayedItems(rs.getString(Offer.DISPLAYED_ITEMS));
+                    clone.setDisplayOptions(rs.getString(Offer.DISPLAY_OPTIONS));
+                    clone.setContent(rs.getString(Offer.CONTENT));
+                    clone.setDuration(rs.getLong(Offer.DURATION));
+                    clone.setPriority(rs.getInt(Offer.PRIORITY));
+                    clone.setPrerequisite(Optional.ofNullable(rs.getString(Offer.PREREQUISITE)).orElse(""));
+                    return clone;
                 });
 
-            }
-            return null;
+
+            Model result = new Model();
+            result.setOffers(clones);
+            return result;
         }
 
         @Override
