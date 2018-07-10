@@ -49,6 +49,7 @@ public class GetCloneDetails
         private int templateId;
         private int priority;
         private String prerequisite;
+        private int maxQuantity;
     }
 
     @Service("getCloneDetailsHandler")
@@ -116,6 +117,7 @@ public class GetCloneDetails
                     clone.setDuration(rs.getLong(Offer.DURATION));
                     clone.setPriority(rs.getInt(Offer.PRIORITY));
                     clone.setPrerequisite(Optional.ofNullable(rs.getString(Offer.PREREQUISITE)).orElse(""));
+                    clone.setMaxQuantity(rs.getInt(Offer.MAX_QUANTITY));
                     return clone;
                 });
 

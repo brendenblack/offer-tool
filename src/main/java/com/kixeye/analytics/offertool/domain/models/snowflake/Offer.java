@@ -31,6 +31,7 @@ public class Offer
     public final static String IS_ENABLED = "IS_ENABLED";
     public final static String PREREQUISITE = "PRE_REQ";
     public final static String PRIORITY = "PRIORITY";
+    public final static String MAX_QUANTITY = "MAX_QTY";
 
     private int id;
     private String offerCode;
