@@ -95,8 +95,7 @@ public class GetAll
                     "    FROM wc.mysql.user_offers_wc uo\n" +
                     "    GROUP BY uo.offer_id\n" +
                     ") offerednumbers\n" +
-                    "ON o.id = offerednumbers.offer_id\n" +
-                    "WHERE cost > 0;";
+                    "ON o.id = offerednumbers.offer_id;";
 
             List<OfferModel> summaries = this.jdbc.query(sql, (rs, rowNum) -> {
                OfferModel summary = new OfferModel();

@@ -78,3 +78,6 @@ target/
 
 application-dev.properties
 src/main/resources/client_secret.json
+/src/test/resources/google-sheets-client-secret.json
+google-sheets-client-secret.json
+/src/main/resources/google-sheets-client-secret.json

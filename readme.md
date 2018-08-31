@@ -8,3 +8,8 @@ Then, when running the program for debugging purposes:
 export SPRING_PROFILES_ACTIVE=dev
 mvn spring-boot:run
 ```
+or on Windows
+```bat
+set SPRING_PROFILES_ACTIVE=dev
+mvn spring-boot:run
+```
